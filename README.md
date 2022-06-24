@@ -22,10 +22,10 @@
 
 ## 界面截图
 
-![img](C:\Users\66396\Documents\GitHub\Petpet\demo_1.png)
+![img](https://raw.githubusercontent.com/B1gM8c/Petpet/main/demo_1.png)
 
-![img](C:\Users\66396\Documents\GitHub\Petpet\demo_2.png)
+![img](https://raw.githubusercontent.com/B1gM8c/Petpet/main/demo_2.png)
 
 ## 使用体验
 
-![img](C:\Users\66396\Documents\GitHub\Petpet\20220623144247723.gif)
+![img](https://raw.githubusercontent.com/B1gM8c/Petpet/main/20220623144247723.gif)
