@@ -2,7 +2,7 @@
 
 灵感来源魔性的petpet摸头gif图片
 
-![demo](C:\Users\66396\Documents\GitHub\Petpet\demo.gif)
+![demo](https://raw.githubusercontent.com/B1gM8c/Petpet/main/demo.gif)
 
 
 
