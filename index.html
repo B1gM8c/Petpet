@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="description" content="petpet generator">
+  <meta name="theme-color" content="#ffeaa8">
+  <meta property="og:title" content="petpet">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://benisland.neocities.org/petpet/">
+  <meta property="og:image" itemprop="image" content="https://benisland.neocities.org/petpet/img/pet.png">
+  <meta property="og:description" itemprop="description" content="petpet gif generator">
+  <title>猪猪摸头在线生成器 | petpet generator</title>
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Sanitize CSS -->
+  <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+  <link href="https://unpkg.com/sanitize.css/forms.css" rel="stylesheet" />
+  <link href="https://unpkg.com/sanitize.css/typography.css" rel="stylesheet" />
+
+  <!-- External -->
+  <link rel="stylesheet" href="https://unpkg.com/jam-icons/css/jam.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Work+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  <style type="text/css">
+    .grid {
+      margin: 0 auto;
+      max-width: 48em;
+      display: grid;
+      grid-template-columns: 38.2% 61.8%;
+      grid-template-areas:
+        "header  header"
+        "preview upload"
+        "preview output"
+        "footer  footer";
+    }
+
+    .header {
+      grid-area: header;
+      text-align: center;
+      padding: 0.618em 0.618em 1.25em;
+    }
+
+    .preview {
+      grid-area: preview;
+      border-top-left-radius: 0.618em;
+      border-bottom-left-radius: 0.618em;
+      padding-right: 0;
+    }
+
+    .upload {
+      grid-area: upload;
+      border-top-right-radius: 0.618em;
+    }
+
+    .output {
+      grid-area: output;
+      border-bottom-right-radius: 0.618em;
+    }
+
+    .footer {
+      grid-area: footer;
+      text-align: center;
+      padding: 1.618em;
+    }
+
+    .preview-canvas {
+      margin: 0 auto 2.312em;
+      max-width: 200px;
+    }
+
+    .preview-playback {
+      display: flex;
+    }
+
+    .preview-playback .btn {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      flex-grow: 1;
+    }
+
+    .btn-playback-playpause.paused .btn-playback-pause,
+    .btn-playback-playpause:not(.paused) .btn-playback-play {
+      display: none;
+    }
+
+    .export-row {
+      margin-top: 1.75em;
+    }
+
+    .output-info {
+      color: var(--txt-light);
+    }
+
+    img[src]+.output-info {
+      margin-top: 1em;
+    }
+
+    fieldset {
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
+
+    #fpsVal {
+      width: 4em;
+      margin-left: 0.618em;
+    }
+
+    @media only screen and (max-width: 40em) {
+      .grid {
+        grid-template-columns: 100%;
+        grid-template-areas:
+          "header"
+          "upload"
+          "preview"
+          "output"
+          "footer";
+      }
+
+      .header,
+      .footer,
+      .content {
+        padding: 1.618em 8%;
+        border-radius: 0;
+      }
+
+      .preview {
+        padding-left: 16%;
+        padding-right: 16%;
+      }
+
+      .content,
+      .footer {
+        border-top: 1px solid var(--input-border);
+      }
+
+      .export-row {
+        margin-top: 2.5em;
+      }
+
+      #fpsVal {
+        width: 7em;
+        font-size: small;
+        padding: 0.5em;
+        padding-right: 0.2em;
+      }
+    }
+
+  </style>
+  <script>/* change theme */ let theme = localStorage.getItem("theme"); theme || (theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"), document.documentElement.setAttribute("data-theme", theme), document.addEventListener("DOMContentLoaded", () => { document.querySelectorAll("a.e").forEach(x => { x.href = x.dataset.href }); const e = document.getElementById("color-theme"); e.checked = "dark" == theme, e.addEventListener("change", t => { theme = e.checked ? "dark" : "light", document.documentElement.setAttribute("data-theme", theme), localStorage.setItem("theme", theme) }) });</script>
+</head>
+
+<body>
+  <main class="grid">
+    <header class="header">
+      <div class="heading">猪猪摸头在线生成 <input type="checkbox" id="color-theme" title="toggle theme"></div>
+      <div>如果网页崩了，一定不是我的锅</div>
+    </header>
+
+    <section class="preview content">
+      <div class="content-heading">预览</div>
+      <div class="preview-canvas">
+        <canvas height="112" width="112" id="canvas" class="canvas" tabindex="1"></canvas>
+        <div class="preview-playback">
+          <button id="prev" class="btn btn-playback-prev control-grouped-left">
+            <i class="jam jam-set-backward"></i>
+          </button>
+          <button id="play" class="btn btn-playback-playpause control-grouped-center">
+            <i class="jam jam-play btn-playback-play"></i>
+            <i class="jam jam-pause btn-playback-pause"></i>
+          </button>
+          <button id="next" class="btn btn-playback-next control-grouped-right">
+            <i class="jam jam-set-forward"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-controls">
+        <div class="row">
+          <div class="control-group">
+            <label for="toggleAdjust" class="control-group-l">细节调整</label>
+            <label for="toggleAdjust" class="toggle-switch">
+              <input id="toggleAdjust" type="checkbox" class="toggle-switch-input">
+              <span class="toggle-switch-control"></span>
+            </label>
+          </div>
+          <div class="hint">
+            您可以使用鼠标/键盘/触控板移动图片细微调整 :-)
+          </div>
+        </div>
+        <div class="row control-group">
+          <label for="toggleFlip" class="control-group-l">翻转</label>
+          <label for="toggleFlip" class="toggle-switch sm">
+            <input id="toggleFlip" type="checkbox" class="toggle-switch-input">
+            <span class="toggle-switch-control"></span>
+          </label>
+        </div>
+        <div class="row control-group">
+          <label for="scale" class="control-label control-group-s">尺寸</label>
+          <input id="scale" class="control-range control-group-l" type="range" step="1" min="15" max="200" value="85">
+        </div>
+        <div class="row control-group">
+          <label for="squish" class="control-label control-group-s">挤压</label>
+          <input id="squish" class="control-range control-group-l" type="range" step="1" min="100" max="300"
+                 value="125">
+        </div>
+        <div class="row control-group">
+          <label for="fps" class="control-label control-group-s">速度</label>
+          <input id="fps" class="control-range" type="range" step="2" min="2" max="60" value="16">
+          <input type="number" id="fpsVal" class="control control-sm" step="1" min="2" max="60" value="16">
+        </div>
+        <div class="row export-row">
+          <div class="control-group">
+            <button id="reset" class="btn btn-reset control-group-s">重设</button>
+            <div class="spacer" style="width:0.382em"></div>
+            <button id="export" class="btn btn-export control-group-l">导出</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="upload content">
+      <div class="content-heading">上传</div>
+      <div class="upload-preview">
+        <label class="drop-area preview-image-container" id="dropArea" for="uploadFile">
+          <div class="drop-area-input">
+            <input class="drop-area-file-input" type="file" id="uploadFile" accept="image/*">
+            <img class="drop-area-preview preview-image" src="https://www.iculture.cc/demo/petpet/fancypig.png" id="uploadPreview">
+            <div class="drop-area-upload" for="uploadFile">
+              <label for="uploadFile" class="drop-area-upload-btn btn">选择文件</label>
+              <label id="uploadFileName" class="drop-area-upload-filename">或者直接拖进来</label>
+            </div>
+          </div>
+        </label>
+        <div class="row control-group">
+          <input class="control control-group-l control-has-icon control-grouped-left" type="url" required
+                 placeholder="输入图片URL地址" id="uploadUrl">
+          <button type="submit" class="btn control-icon control-grouped-right" id="uploadUrlBtn"><i
+               class="jam jam-upload"></i></button>
+        </div>
+        <p id="uploadError" class="error-message"></p>
+        <p class="help">温馨提示：上传图片URL不一定 <a data-href="https://www.iculture.cc" target="_blank"
+             class="e">有效</a> 因为有些网站做了跨域限制</p>
+      </div>
+    </section>
+
+    <section class="output content">
+      <div class="content-heading">输出</div>
+      <figure class="preview-image-container">
+        <img width="112" height="112" class="preview-image" id="result">
+        <div class="help output-info" id="info">...</div>
+      </figure>
+      <p class="help">
+        <a data-href='https://www.iculture.cc' target="_blank" class="e">备注：</a> 请将图片保存到本地，不要直接复制图片地址
+      </p>
+      <p class="help">如果输出中出现了奇怪的绿点，请换个浏览器。</p>
+    </section>
+
+    <footer class="footer help">
+      <div>
+        <a href="https://www.iculture.cc">猪猪通知群</a>
+        <span class="separator">|</span>
+        素材模板： <a href="img/template.gif" target="_blank">gif</a>, <a href="img/sprite.png"
+           target="_blank">sprite</a>
+        <span class="separator">|</span>
+        本项目使用开源项目 <a href="https://github.com/jnordberg/gif.js" target="_blank">gif.js</a>
+      </div>
+      <br>
+      <a class="e fingies" id="fg" data-href="https://www.iculture.cc" title="😳" target="_blank">
+        <span class="fl">👉猪猪</span><span>博客👈</span>
+      </a>
+      <br>
+    </footer>
+  </main>
+
+  <script src="requestInterval.js"></script>
+  <script src="gif.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>

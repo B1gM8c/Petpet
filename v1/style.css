@@ -1,0 +1,325 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --border-color: #ddd;
+  --bg: #eee;
+  --fg: #fff;
+  --hl: #f9f9f9;
+  --txt: #444;
+  --txt-light: #999;
+  --txt-mute: #777;
+  --icon: "🌞";
+  --link: #00f;
+  --canvas-bg: #fff;
+  --canvas-border: #ddd;
+  --input-filter: invert(0) grayscale(0);
+}
+
+[data-theme="dark"] {
+  --border-color: #1a1a1a;
+  --bg: #111;
+  --fg: #000;
+  --hl: #111;
+  --txt: #bbb;
+  --txt-light: #666;
+  --txt-mute: #999;
+  --icon: "🌛";
+  --link: #77f;
+  --canvas-bg: #333;
+  --canvas-border: #353535;
+  --input-filter: invert(1) grayscale(1);
+}
+
+:any-link {
+  color: var(--link);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  background: var(--bg);
+  color: var(--txt);
+  border-color: var(--border-color);
+}
+
+button,
+input {
+  padding: 0.3em;
+  filter: var(--input-filter);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+h4 {
+  display: block;
+  text-align: center;
+  margin-top: 0;
+}
+
+p {
+  max-width: 25em;
+  margin: 1em auto;
+}
+
+.parent {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas: "header  header""preview upload""preview output""footer  footer";
+}
+
+.header {
+  grid-area: header;
+}
+
+.preview {
+  grid-area: preview;
+}
+
+.upload {
+  grid-area: upload;
+}
+
+.output {
+  grid-area: output;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.header,
+.footer {
+  text-align: center;
+  padding: 0.5em;
+  color: var(--txt-mute);
+}
+
+.header h1 {
+  margin: 0.5em 0 0;
+}
+
+section {
+  background: var(--fg);
+  border-style: solid;
+  border-color: var(--border-color);
+  text-align: center;
+  padding: 1.5em 2em;
+  border-width: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.preview {
+  border-left-width: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preview .row {
+  width: 14em;
+}
+
+.footer {
+  font-size: 0.9em;
+  border-top-width: 1px;
+  padding-bottom: 2em;
+}
+
+.row {
+  margin: 0 0 0.5em;
+}
+
+.hint {
+  font-size: 0.9em;
+}
+
+.adjust {
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25em;
+}
+
+.controls button {
+  flex-grow: 1;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 1em;
+}
+
+.control-row label {
+  margin-right: 1em;
+  width: 20%;
+  text-align: left;
+}
+
+.control-row input,
+.control-row button {
+  flex-grow: 1;
+}
+
+#uploadFile {
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.form-row {
+  display: flex;
+  text-align: left;
+  align-items: center;
+  margin-bottom: 0.25em;
+}
+
+.form-row input {
+  flex-grow: 1;
+}
+
+.form-row label {
+  margin-right: 0.5em;
+}
+
+.upload-preview {
+  text-align: center;
+  color: var(--txt-light);
+  background: var(--hl);
+  border-radius: 0.5em;
+  padding: 0.75em;
+}
+
+.upload-preview img {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  margin: 0.5em 0;
+}
+
+#uploadPreview.error {
+  border-color: red;
+}
+
+.upload-error {
+  color: red;
+}
+
+#result {
+  width: unset;
+  height: unset;
+}
+
+#result:not([src^="blob"]) {
+  border-width: 0;
+}
+
+.adjust,
+.controls {
+  max-width: unset;
+}
+
+img,
+canvas {
+  border: 1px solid var(--canvas-border);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#canvas {
+  width: 100% !important;
+  height: auto;
+  image-rendering: pixelated;
+  border-width: 2px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 0;
+  }
+
+  .container {
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    grid-template-columns: 100vw;
+    grid-template-areas: "header""upload""preview""output""footer";
+  }
+
+  .header,
+  .footer {
+    background: transparent;
+  }
+
+  button,
+  #export {
+    padding: 0.75em;
+  }
+
+  section {
+    border-left: 0;
+    border-right: 0;
+  }
+}
+
+a.e {
+  color: inherit;
+  text-decoration: none;
+  cursor: unset;
+}
+
+.fingies {
+  letter-spacing: -3px;
+  display: block;
+}
+
+.fingies:hover .fl {
+  animation: fingers 1s ease-in-out infinite;
+}
+
+@keyframes fingers {
+  0% {
+    margin-right: 0em;
+  }
+
+  50% {
+    margin-right: 0.75em;
+  }
+
+  100% {
+    margin-right: 0em;
+  }
+}
+
+#color-theme {
+  appearance: none;
+  filter: none;
+  visibility: hidden;
+}
+
+#color-theme::after {
+  content: var(--icon);
+  font-size: 1.75em;
+  visibility: initial;
+  cursor: pointer;
+  width: 1rem;
+  display: inline-block;
+  text-align: center;
+}
